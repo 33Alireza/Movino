@@ -3,4 +3,8 @@
     <string name="home_screen_title">Home</string>
     <string name="navigation_icon_content_description">Back</string>
     <string name="profile_icon_content_description">Profile</string>
+    <string name="movie_search_bar_search_icon_content_description">Movies search bar search icon</string>
+    <string name="movie_search_bar_search_place_holder_text">Search movies</string>
+    <string name="movie_search_bar_loading_icon_content_description">Movies search bar loading icon</string>
+
 </resources>
