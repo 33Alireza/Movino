@@ -30,8 +30,7 @@ fun MovieSlider(
 ) {
     val moviesRowListState = rememberLazyListState()
     LaunchedEffect(moviesRowListState) {
-        snapshotFlow { moviesRowListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-            .collect { lastVisibleIndex ->
+        snapshotFlow { moviesRowListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }.collect { lastVisibleIndex ->
                 moviesState.value?.let {
                     if (lastVisibleIndex == it.size - 1) {
                         getMoreMovies()
@@ -71,50 +70,43 @@ private fun MovieSliderPreview() {
     MovinoTheme {
         MovieSlider(
             moviesState = mutableStateOf(
-                listOf(
-                    MovieData(
-                        1,
-                        "The Shawshank Redemption",
-                        "http://moviesapi.ir/images/tt0111161_poster.jpg",
-                        genres = listOf(
-                            "Crime",
-                            "Drama"
-                        ),
-                        images = listOf(
-                            "http://moviesapi.ir/images/tt0111161_screenshot1.jpg",
-                            "http://moviesapi.ir/images/tt0111161_screenshot2.jpg",
-                            "http://moviesapi.ir/images/tt0111161_screenshot3.jpg"
-                        ),
-                        year = "2008",
-                        country = "USA, CANADA",
-                        imdbRating = "9.8",
+            listOf(
+                MovieData(
+                    1,
+                    "The Shawshank Redemption",
+                    "http://moviesapi.ir/images/tt0111161_poster.jpg",
+                    genres = listOf(
+                        "Crime", "Drama"
                     ),
-                    MovieData(
-                        2,
-                        "The Godfather",
-                        "http://moviesapi.ir/images/tt0068646_poster.jpg",
-                        genres = listOf(
-                            "Crime",
-                            "Drama"
-                        ),
-                        images = listOf(
-                            "http://moviesapi.ir/images/tt0068646_screenshot1.jpg",
-                            "http://moviesapi.ir/images/tt0068646_screenshot2.jpg",
-                            "http://moviesapi.ir/images/tt0068646_screenshot3.jpg"
-                        ),
-                        year = "2008",
-                        country = "USA, CANADA",
-                        imdbRating = "9.8",
-                    )
+                    images = listOf(
+                        "http://moviesapi.ir/images/tt0111161_screenshot1.jpg",
+                        "http://moviesapi.ir/images/tt0111161_screenshot2.jpg",
+                        "http://moviesapi.ir/images/tt0111161_screenshot3.jpg"
+                    ),
+                    year = "2008",
+                    country = "USA, CANADA",
+                    imdbRating = "9.8",
+                ), MovieData(
+                    2,
+                    "The Godfather",
+                    "http://moviesapi.ir/images/tt0068646_poster.jpg",
+                    genres = listOf(
+                        "Crime", "Drama"
+                    ),
+                    images = listOf(
+                        "http://moviesapi.ir/images/tt0068646_screenshot1.jpg",
+                        "http://moviesapi.ir/images/tt0068646_screenshot2.jpg",
+                        "http://moviesapi.ir/images/tt0068646_screenshot3.jpg"
+                    ),
+                    year = "2008",
+                    country = "USA, CANADA",
+                    imdbRating = "9.8",
                 )
-            ),
-            getMoreMovies = {},
-            onMovieClick = {
-                Log.d(
-                    "UDP",
-                    "movie with id $it clicked"
-                )
-            }
-        )
+            )
+        ), getMoreMovies = {}, onMovieClick = {
+            Log.d(
+                "UDP", "movie with id $it clicked"
+            )
+        })
     }
 }

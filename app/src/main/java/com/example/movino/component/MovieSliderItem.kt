@@ -39,12 +39,10 @@ fun MovieSliderItem(
             .height(148.dp)
             .background(
                 MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-            ),
-        onClick = onMovieClick
+            ), onClick = onMovieClick
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             AsyncImage(
                 model = movie.images?.last(),
@@ -84,8 +82,7 @@ private fun MovieSliderItemPreview() {
                 "The Shawshank Redemption",
                 "http://moviesapi.ir/images/tt0111161_screenshot1.jpg",
                 genres = listOf(
-                    "Crime",
-                    "Drama"
+                    "Crime", "Drama"
                 ),
                 images = listOf(
                     ""

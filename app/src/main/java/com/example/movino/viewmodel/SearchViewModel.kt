@@ -14,13 +14,13 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.collections.plus
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val moviesApi: MoviesApi
+    private val moviesApi: MoviesApi,
 ) : ViewModel() {
+
     private val _movies = MutableStateFlow<List<MovieData>>(emptyList())
     val movies = _movies.asStateFlow()
 
@@ -56,12 +56,13 @@ class SearchViewModel @Inject constructor(
             val response = moviesApi.getMovies(movieName = name)
 
             val filteredMovies = response.data.filter {
-                it.title.isBlank() && it.year.isBlank() && it.imdbRating.isNotBlank() && it.poster.isNotBlank()
+                it.title.isNotBlank() && it.year.isNotBlank() && it.imdbRating.isNotBlank() && it.poster.isNotBlank()
             }.distinctBy { it.title.lowercase().trim() }
 
             _movies.value = filteredMovies
             _uiState.value = if (filteredMovies.isEmpty()) UiStateEnum.Empty
             else UiStateEnum.Success
+
         } catch (_: Exception) {
             _uiState.value = UiStateEnum.Exception
         }

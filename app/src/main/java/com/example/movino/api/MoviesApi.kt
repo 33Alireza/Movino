@@ -23,7 +23,7 @@ class MoviesApi(val client: HttpClient) {
 
     suspend fun getMoviesByGenreId(genreId: Int, page: Int = 1): MoviesResponse {
         try {
-            return bodyOrThrow(client.get("api/v1/$genreId/movies") {
+            return bodyOrThrow(client.get("api/v1/genres/$genreId/movies") {
                 parameter("page", page)
             })
         } catch (_: Exception) {
@@ -31,7 +31,7 @@ class MoviesApi(val client: HttpClient) {
         }
     }
 
-    suspend fun getMoviesById(movieId: Int): MovieResponse {
+    suspend fun getMovieById(movieId: Int): MovieResponse {
         try {
             return bodyOrThrow(
                 client.get("api/v1/movies/$movieId")

@@ -40,9 +40,7 @@ fun MovieCard(
         ),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AsyncImage(
                 model = movie.poster,
@@ -53,14 +51,12 @@ fun MovieCard(
                     .fillMaxHeight()
                     .clip(
                         RoundedCornerShape(
-                            topStart = 24.dp,
-                            bottomStart = 24.dp
+                            topStart = 24.dp, bottomStart = 24.dp
                         )
                     )
             )
             Column(
-                modifier = Modifier
-                    .fillMaxHeight(),
+                modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.Start
             ) {

@@ -30,7 +30,7 @@ import com.example.movino.component.CustomTopAppBar
 import com.example.movino.component.MovieCard
 import com.example.movino.component.MovieSearchBar
 import com.example.movino.component.SearchResult
-import com.example.movino.model.SearchResultError
+import com.example.movino.component.SearchResultError
 import com.example.movino.model.MovieData
 import com.example.movino.viewmodel.SearchViewModel
 import com.example.movino.model.UiStateEnum

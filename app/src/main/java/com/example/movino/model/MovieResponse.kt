@@ -18,14 +18,10 @@ data class MovieResponse(
     val plot: String,
     val country: String,
     val awards: String,
-    @SerialName("metascore")
-    val metaScore: String,
-    @SerialName("imdb_rating")
-    val imdbRating: String,
-    @SerialName("imdb_votes")
-    val imdbVotes: String,
-    @SerialName("imdb_id")
-    val imdbId: String,
+    @SerialName("metascore") val metaScore: String,
+    @SerialName("imdb_rating") val imdbRating: String,
+    @SerialName("imdb_votes") val imdbVotes: String,
+    @SerialName("imdb_id") val imdbId: String,
     val type: String,
     val genres: List<String>,
     val images: List<String>? = null,

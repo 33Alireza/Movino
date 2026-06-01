@@ -43,8 +43,7 @@ fun GenreSlider(
                     },
                     label = {
                         Text(
-                            text = genre.name,
-                            style = if (isSelected) {
+                            text = genre.name, style = if (isSelected) {
                                 MaterialTheme.typography.labelLarge
                             } else {
                                 MaterialTheme.typography.labelMedium
@@ -72,25 +71,20 @@ private fun GenreSliderPreview() {
         GenreSlider(
             genresList = listOf(
                 Genre(
-                    id = 1,
-                    name = "Action"
+                    id = 1, name = "Action"
                 ),
                 Genre(
-                    id = 2,
-                    name = "Drama"
+                    id = 2, name = "Drama"
                 ),
                 Genre(
-                    id = 3,
-                    name = "Comedy"
+                    id = 3, name = "Comedy"
                 ),
                 Genre(
-                    id = 4,
-                    name = "Fantasy"
+                    id = 4, name = "Fantasy"
                 ),
             ),
             selectedGenre = Genre(
-                id = 3,
-                name = "Comedy"
+                id = 3, name = "Comedy"
             ),
             onCategorySelected = {},
         )

@@ -39,7 +39,7 @@ class DetailViewModel @Inject constructor(
         isLoading.value = true
         viewModelScope.launch {
             try {
-                val response = moviesApi.getMoviesById(movieId)
+                val response = moviesApi.getMovieById(movieId)
                 _movie.value = response
             } catch (e: Exception) {
                 _event.emit(e.message ?: "Server Error")

@@ -1,11 +1,9 @@
-package com.example.movino.model
+package com.example.movino.component
 
 import com.example.movino.R
 
 enum class SearchResultError(
-    val iconId: Int,
-    val title: String,
-    val description: String
+    val iconId: Int, val title: String, val description: String
 ) {
     NotFound(
         iconId = R.drawable.ic_search_not_found,

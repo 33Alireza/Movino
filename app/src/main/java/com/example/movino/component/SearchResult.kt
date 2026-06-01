@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.movino.model.SearchResultError
+import com.example.movino.component.SearchResultError
 import com.example.movino.ui.theme.MovinoTheme
 
 @Composable
@@ -30,8 +30,7 @@ fun SearchResult(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Icon(
-            modifier = Modifier
-                .size(48.dp),
+            modifier = Modifier.size(48.dp),
             imageVector = ImageVector.vectorResource(searchResultError.iconId),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onBackground
