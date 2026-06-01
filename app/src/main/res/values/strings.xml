@@ -19,4 +19,5 @@
     <string name="detail_screen_actors">Actors</string>
     <string name="snack_bar_action_label">Retry</string>
     <string name="image_content_description">Image</string>
+    <string name="profile_icon_content_description">Profile</string>
 </resources>
