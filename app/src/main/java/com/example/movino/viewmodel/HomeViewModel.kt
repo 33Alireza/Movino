@@ -89,19 +89,6 @@ class HomeViewModel @Inject constructor(
             isLoading.value = false
         }
 
-        fun onGenreChange(newGenre: Genre) {
-            if (!isLoading.value) {
-                viewModelScope.launch {
-                    try {
-                        selectedGenre.value = newGenre
-                        getMovies()
-                    } catch (e: Exception) {
-                        onError(e.message ?: "Unknown error")
-                    }
-                }
-            }
-        }
-
     }
 
     fun refreshState() {
@@ -112,6 +99,19 @@ class HomeViewModel @Inject constructor(
                     getMovies()
                 } catch (e: Exception) {
                     onError(e.message ?: "Unknown Error")
+                }
+            }
+        }
+    }
+
+    fun onGenreChange(newGenre: Genre) {
+        if (!isLoading.value) {
+            viewModelScope.launch {
+                try {
+                    selectedGenre.value = newGenre
+                    getMovies()
+                } catch (e: Exception) {
+                    onError(e.message ?: "Unknown error")
                 }
             }
         }

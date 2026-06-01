@@ -7,4 +7,5 @@
     <string name="movie_search_bar_search_place_holder_text">Search movies</string>
     <string name="movie_search_bar_loading_icon_content_description">Movies search bar loading icon</string>
     <string name="movie_card_imdb_title">IMDb:</string>
+    <string name="snack_bar_action_label">Retry</string>
 </resources>
