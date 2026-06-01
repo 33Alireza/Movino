@@ -35,7 +35,7 @@ class DetailViewModel @Inject constructor(
         getMovie()
     }
 
-    private fun getMovie() {
+    fun getMovie() {
         isLoading.value = true
         viewModelScope.launch {
             try {
