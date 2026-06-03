@@ -7,25 +7,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.movino.view.DetailScreen
 import com.example.movino.view.HomeScreen
 import com.example.movino.view.SearchScreen
-import com.example.movino.view.SplashScreen
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
 
     NavHost(
-        navController = navController, startDestination = Splash
+        navController = navController, startDestination = Home
     ) {
-        composable<Splash> {
-            SplashScreen(
-                navigateToHomeScreen = {
-                    navController.navigate(Home) {
-                        popUpTo(Splash) {
-                            inclusive = true
-                        }
-                    }
-                })
-        }
         composable<Home> {
             HomeScreen(
                 navigateToMovieDetailScreen = { navController.navigate(Detail(it)) },
