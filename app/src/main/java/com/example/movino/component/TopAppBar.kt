@@ -50,7 +50,8 @@ fun CustomTopAppBar(
                 Icon(
                     modifier = Modifier.size(24.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.ic_profile),
-                    contentDescription = stringResource(R.string.profile_icon_content_description)
+                    contentDescription = stringResource(R.string.profile_icon_content_description),
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
         })
