@@ -60,6 +60,7 @@ fun MovieSearchBar(
                 tint = MaterialTheme.colorScheme.onSurface
             )
             BasicTextField(
+                modifier = Modifier.fillMaxWidth(),
                 value = value,
                 onValueChange = onValueChange,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
