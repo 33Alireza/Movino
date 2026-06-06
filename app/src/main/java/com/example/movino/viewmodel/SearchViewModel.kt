@@ -55,12 +55,8 @@ class SearchViewModel @Inject constructor(
         try {
             val response = moviesApi.getMovies(movieName = name)
 
-            val filteredMovies = response.data.filter {
-                it.title.isNotBlank() && it.year.isNotBlank() && it.imdbRating.isNotBlank() && it.poster.isNotBlank()
-            }.distinctBy { it.title.lowercase().trim() }
-
-            _movies.value = filteredMovies
-            _uiState.value = if (filteredMovies.isEmpty()) UiStateEnum.Empty
+            _movies.value = response.data
+            _uiState.value = if (response.data.isEmpty()) UiStateEnum.Empty
             else UiStateEnum.Success
 
         } catch (_: Exception) {
