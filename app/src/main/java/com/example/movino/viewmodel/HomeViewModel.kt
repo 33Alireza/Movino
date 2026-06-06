@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,30 +41,6 @@ class HomeViewModel @Inject constructor(
 
     suspend fun onError(message: String) {
         _event.emit(message)
-    }
-
-    suspend fun getMoreMovies() {
-        if (!isLoading.value) {
-            _movies.value?.let {
-                try {
-                    val moviesResponse: List<MovieData>
-                    val newPage = (it.size / 10) + 1
-                    moviesResponse = if (selectedGenre.value.name == "All") {
-                        moviesApi.getMovies(page = newPage).data
-                    } else {
-                        moviesApi.getMoviesByGenreId(selectedGenre.value.id, newPage).data
-                    }
-                    _movies.update { currentMovies ->
-                        currentMovies?.plus(moviesResponse)
-                    }
-                    _movies.update { currentMovies ->
-                        currentMovies?.distinctBy { movie -> movie.title }
-                    }
-                } catch (e: Exception) {
-                    onError(e.message ?: "Unknown Error")
-                }
-            }
-        }
     }
 
     suspend fun getMovies() {

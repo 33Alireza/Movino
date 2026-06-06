@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -58,17 +56,6 @@ fun HomeScreen(
             )
             if (result == SnackbarResult.ActionPerformed) {
                 viewModel.refreshState()
-            }
-        }
-    }
-
-    val listState = rememberLazyListState()
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }.collect { lastVisibleIndex ->
-            moviesState.value?.let {
-                if (lastVisibleIndex == it.size - 1) {
-                    viewModel.getMoreMovies()
-                }
             }
         }
     }
@@ -115,10 +102,9 @@ fun HomeScreen(
                     MovieSlider(
                         moviesState = moviesState,
                         onMovieClick = { navigateToMovieDetailScreen(it) },
-                        getMoreMovies = { viewModel.getMoreMovies() },
                     )
                     LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp), state = listState
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         items(movies) {
                             MovieCard(
