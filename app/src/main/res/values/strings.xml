@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">Movino</string>
+    <string name="movie_search_bar_search_place_holder_text">Search movies</string>
+    <string name="movie_search_bar_search_icon_content_description">Movies search bar search icon</string>
+    <string name="movie_search_bar_loading_icon_content_description">Movies search bar loading icon</string>
+    <string name="splash_view_icon_content_description">Splash Screen Icon</string>
+    <string name="movie_card_image_title">Movie Image</string>
+    <string name="movie_card_location_icon">Location</string>
+    <string name="movie_card_calender_icon">Year</string>
+    <string name="movie_card_genre_icon">Genre</string>
+    <string name="imdb_string">IMDb</string>
+    <string name="home_screen_title">Home</string>
+    <string name="navigation_icon_content_description">Back</string>
+    <string name="movie_card_imdb_title">IMDb:</string>
+    <string name="search_screen_title">Search</string>
+    <string name="detail_screen_title">Movie</string>
+    <string name="detail_screen_director">Director</string>
+    <string name="detail_screen_writers">Writers</string>
+    <string name="detail_screen_actors">Actors</string>
+    <string name="snack_bar_action_label">Retry</string>
+    <string name="image_content_description">Image</string>
+    <string name="profile_icon_content_description">Profile</string>
 </resources>
