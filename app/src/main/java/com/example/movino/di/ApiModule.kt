@@ -1,7 +1,7 @@
 package com.example.movino.di
 
-import com.example.movino.api.GenresApi
-import com.example.movino.api.MoviesApi
+import com.example.movino.data.api.GenresApi
+import com.example.movino.data.api.MoviesApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
