@@ -1,6 +1,6 @@
 package com.example.movino.di
 
-import com.example.movino.api.initialization
+import com.example.movino.core.network.initialization
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
