@@ -1,14 +1,14 @@
 package com.example.movino.data.api
 
 import com.example.movino.core.network.bodyOrThrow
-import com.example.movino.data.dto.MovieResponse
-import com.example.movino.data.dto.MoviesResponse
+import com.example.movino.data.dto.MovieDto
+import com.example.movino.data.dto.MoviesDto
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 
 class MoviesApi(val client: HttpClient) {
-    suspend fun getMovies(movieName: String = "", page: Int = 1): MoviesResponse {
+    suspend fun getMovies(movieName: String = "", page: Int = 1): MoviesDto {
         try {
             return bodyOrThrow(
                 client.get("api/v1/movies") {
@@ -22,7 +22,7 @@ class MoviesApi(val client: HttpClient) {
         }
     }
 
-    suspend fun getMoviesByGenreId(genreId: Int, page: Int = 1): MoviesResponse {
+    suspend fun getMoviesByGenreId(genreId: Int, page: Int = 1): MoviesDto {
         try {
             return bodyOrThrow(client.get("api/v1/genres/$genreId/movies") {
                 parameter("page", page)
@@ -32,7 +32,7 @@ class MoviesApi(val client: HttpClient) {
         }
     }
 
-    suspend fun getMovieById(movieId: Int): MovieResponse {
+    suspend fun getMovieById(movieId: Int): MovieDto {
         try {
             return bodyOrThrow(
                 client.get("api/v1/movies/$movieId")

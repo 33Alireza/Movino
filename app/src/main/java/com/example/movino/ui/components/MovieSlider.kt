@@ -15,13 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.movino.data.dto.MovieData
+import com.example.movino.data.dto.MovieDataDto
 import com.example.movino.ui.theme.MovinoTheme
 
 @Composable
 fun MovieSlider(
     modifier: Modifier = Modifier,
-    moviesState: State<List<MovieData>?>,
+    moviesState: State<List<MovieDataDto>?>,
     onMovieClick: (Int) -> Unit,
 ) {
 
@@ -56,7 +56,7 @@ private fun MovieSliderPreview() {
         MovieSlider(
             moviesState = mutableStateOf(
                 listOf(
-                    MovieData(
+                    MovieDataDto(
                         1,
                         "The Shawshank Redemption",
                         "http://moviesapi.ir/images/tt0111161_poster.jpg",
@@ -71,7 +71,7 @@ private fun MovieSliderPreview() {
                         year = "2008",
                         country = "USA, CANADA",
                         imdbRating = "9.8",
-                    ), MovieData(
+                    ), MovieDataDto(
                         2,
                         "The Godfather",
                         "http://moviesapi.ir/images/tt0068646_poster.jpg",

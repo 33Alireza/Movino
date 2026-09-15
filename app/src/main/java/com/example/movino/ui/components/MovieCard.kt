@@ -20,14 +20,14 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.example.movino.data.dto.MovieData
+import com.example.movino.data.dto.MovieDataDto
 import com.example.movino.ui.theme.MovinoTheme
 import com.example.movino.R
 
 @Composable
 fun MovieCard(
     modifier: Modifier = Modifier,
-    movie: MovieData,
+    movie: MovieDataDto,
 ) {
     Card(
         modifier = modifier
@@ -135,7 +135,7 @@ fun MovieCard(
 private fun MovieCardPreview() {
     MovinoTheme {
         MovieCard(
-            movie = MovieData(
+            movie = MovieDataDto(
                 id = 1,
                 title = "The Dark knight",
                 poster = "https://moviesapi.ir/images/tt0468569_poster.jpg",
