@@ -18,7 +18,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +28,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movino.R
 import com.example.movino.ui.components.CustomTopAppBar
 import com.example.movino.ui.components.GenreSlider
@@ -41,17 +42,17 @@ fun HomeScreen(
     navigateToMovieSearchScreen: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val moviesState = viewModel.movies.collectAsState()
-    val genresState = viewModel.genres.collectAsState()
-    val isLoading = viewModel.isLoading.collectAsState().value
-    val selectedGenre = viewModel.selectedGenre.collectAsState().value
+    val moviesState by viewModel.movies.collectAsStateWithLifecycle()
+    val genresState by viewModel.genres.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val selectedGenre by viewModel.selectedGenre.collectAsStateWithLifecycle()
 
     val actionLabel = stringResource(R.string.snack_bar_action_label)
     val snackBarHostState = remember { SnackbarHostState() }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(moviesState, genresState) {
         viewModel.event.collect {
             val result = snackBarHostState.showSnackbar(
-                message = it, actionLabel = actionLabel, duration = SnackbarDuration.Long
+                message = it, actionLabel = actionLabel, duration = SnackbarDuration.Indefinite
             )
             if (result == SnackbarResult.ActionPerformed) {
                 viewModel.refreshState()
@@ -82,9 +83,9 @@ fun HomeScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            genresState.value?.let {
+            genresState?.let {
                 GenreSlider(
-                    genresList = genresState.value ?: emptyList(),
+                    genresList = genresState ?: emptyList(),
                     selectedGenre = selectedGenre,
                     onCategorySelected = { viewModel.onGenreChange(it) })
             }
@@ -97,19 +98,25 @@ fun HomeScreen(
                     CircularProgressIndicator()
                 }
             } else {
-                moviesState.value?.let { movies ->
-                    MovieSlider(
-                        moviesState = moviesState,
-                        onMovieClick = { navigateToMovieDetailScreen(it) },
-                    )
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        items(movies) {
-                            MovieCard(
-                                movie = it, modifier = Modifier.clickable(
-                                    onClick = { navigateToMovieDetailScreen(it.id) })
+                moviesState?.let { movies ->
+                    LazyColumn {
+                        item {
+                            MovieSlider(
+                                moviesState = moviesState,
+                                onMovieClick = { navigateToMovieDetailScreen(it) },
                             )
+                        }
+                        item{
+                            LazyColumn(
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                items(movies) {
+                                    MovieCard(
+                                        movie = it, modifier = Modifier.clickable(
+                                            onClick = { navigateToMovieDetailScreen(it.id) })
+                                    )
+                                }
+                            }
                         }
                     }
                 }

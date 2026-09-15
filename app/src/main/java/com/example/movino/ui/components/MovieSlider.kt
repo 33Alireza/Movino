@@ -9,8 +9,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,11 +19,11 @@ import com.example.movino.ui.theme.MovinoTheme
 @Composable
 fun MovieSlider(
     modifier: Modifier = Modifier,
-    moviesState: State<List<MovieDataDto>?>,
+    moviesState: List<MovieDataDto>?,
     onMovieClick: (Int) -> Unit,
 ) {
 
-    moviesState.value?.let { movies ->
+    moviesState?.let { movies ->
         Column(
             modifier = modifier,
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -54,7 +52,7 @@ fun MovieSlider(
 private fun MovieSliderPreview() {
     MovinoTheme {
         MovieSlider(
-            moviesState = mutableStateOf(
+            moviesState =
                 listOf(
                     MovieDataDto(
                         1,
@@ -87,8 +85,7 @@ private fun MovieSliderPreview() {
                         country = "USA, CANADA",
                         imdbRating = "9.8",
                     )
-                )
-            ), onMovieClick = {
+                ), onMovieClick = {
                 Log.d(
                     "UDP", "movie with id $it clicked"
                 )
