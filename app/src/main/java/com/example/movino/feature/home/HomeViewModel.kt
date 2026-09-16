@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movino.data.api.GenresApi
 import com.example.movino.data.api.MoviesApi
-import com.example.movino.data.dto.Genre
-import com.example.movino.data.dto.MovieData
+import com.example.movino.data.dto.GenreDto
+import com.example.movino.data.dto.MovieDataDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,10 +19,10 @@ class HomeViewModel @Inject constructor(
     private val moviesApi: MoviesApi,
     private val genresApi: GenresApi,
 ) : ViewModel() {
-    private var _movies = MutableStateFlow<List<MovieData>?>(null)
+    private var _movies = MutableStateFlow<List<MovieDataDto>?>(null)
     val movies = _movies.asStateFlow()
 
-    private var _genres = MutableStateFlow<List<Genre>?>(null)
+    private var _genres = MutableStateFlow<List<GenreDto>?>(null)
     val genres = _genres.asStateFlow()
 
     private var _event = MutableSharedFlow<String>()
@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
     var isLoading = MutableStateFlow(false)
         private set
 
-    var selectedGenre = MutableStateFlow(Genre(-1, "All"))
+    var selectedGenre = MutableStateFlow(GenreDto(-1, "All"))
         private set
 
 
@@ -46,7 +46,7 @@ class HomeViewModel @Inject constructor(
     suspend fun getMovies() {
         if (!isLoading.value) {
             isLoading.value = true
-            val moviesResponse: List<MovieData> = if (selectedGenre.value.name == "All") {
+            val moviesResponse: List<MovieDataDto> = if (selectedGenre.value.name == "All") {
                 moviesApi.getMovies().data
             } else {
                 moviesApi.getMoviesByGenreId(selectedGenre.value.id).data
@@ -60,7 +60,7 @@ class HomeViewModel @Inject constructor(
         if (!isLoading.value) {
             isLoading.value = true
             val genresResponse = genresApi.getGenres()
-            _genres.value = listOf(Genre(-1, "All")) + genresResponse
+            _genres.value = listOf(GenreDto(-1, "All")) + genresResponse
             isLoading.value = false
         }
 
@@ -79,7 +79,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onGenreChange(newGenre: Genre) {
+    fun onGenreChange(newGenre: GenreDto) {
         if (!isLoading.value) {
             viewModelScope.launch {
                 try {

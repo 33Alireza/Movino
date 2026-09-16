@@ -28,7 +28,7 @@ import com.example.movino.ui.components.MovieCard
 import com.example.movino.ui.components.MovieSearchBar
 import com.example.movino.ui.components.SearchResult
 import com.example.movino.ui.components.SearchResultError
-import com.example.movino.data.dto.MovieData
+import com.example.movino.data.dto.MovieDataDto
 import com.example.movino.core.common.UiStateEnum
 import com.example.movino.ui.theme.MovinoTheme
 
@@ -96,7 +96,7 @@ fun SearchScreen(
             ) {
                 items(moviesState.value) { movie ->
                     MovieCard(
-                        movie = MovieData(
+                        movie = MovieDataDto(
                             id = movie.id,
                             title = movie.title,
                             poster = movie.poster,

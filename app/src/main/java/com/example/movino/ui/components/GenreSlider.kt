@@ -12,15 +12,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.movino.data.dto.Genre
+import com.example.movino.data.dto.GenreDto
 import com.example.movino.ui.theme.MovinoTheme
 
 @Composable
 fun GenreSlider(
     modifier: Modifier = Modifier,
-    genresList: List<Genre>,
-    selectedGenre: Genre,
-    onCategorySelected: (Genre) -> Unit,
+    genresList: List<GenreDto>,
+    selectedGenre: GenreDto,
+    onCategorySelected: (GenreDto) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -70,20 +70,20 @@ private fun GenreSliderPreview() {
     MovinoTheme {
         GenreSlider(
             genresList = listOf(
-                Genre(
+                GenreDto(
                     id = 1, name = "Action"
                 ),
-                Genre(
+                GenreDto(
                     id = 2, name = "Drama"
                 ),
-                Genre(
+                GenreDto(
                     id = 3, name = "Comedy"
                 ),
-                Genre(
+                GenreDto(
                     id = 4, name = "Fantasy"
                 ),
             ),
-            selectedGenre = Genre(
+            selectedGenre = GenreDto(
                 id = 3, name = "Comedy"
             ),
             onCategorySelected = {},

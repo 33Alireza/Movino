@@ -23,13 +23,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.example.movino.data.dto.MovieData
+import com.example.movino.data.dto.MovieDataDto
 import com.example.movino.ui.theme.MovinoTheme
 
 @Composable
 fun MovieSliderItem(
     modifier: Modifier = Modifier,
-    movie: MovieData,
+    movie: MovieDataDto,
     onMovieClick: () -> Unit,
 ) {
     Card(
@@ -77,7 +77,7 @@ fun MovieSliderItem(
 private fun MovieSliderItemPreview() {
     MovinoTheme {
         MovieSliderItem(
-            movie = MovieData(
+            movie = MovieDataDto(
                 1,
                 "The Shawshank Redemption",
                 "http://moviesapi.ir/images/tt0111161_screenshot1.jpg",

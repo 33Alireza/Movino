@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.movino.core.navigation.Detail
 import com.example.movino.data.api.MoviesApi
-import com.example.movino.data.dto.MovieResponse
+import com.example.movino.data.dto.MovieDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val moviesApi: MoviesApi, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _movie = MutableStateFlow<MovieResponse?>(null)
+    private val _movie = MutableStateFlow<MovieDto?>(null)
     val movie = _movie.asStateFlow()
 
     private val _event = MutableSharedFlow<String>()
