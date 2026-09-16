@@ -76,7 +76,7 @@ fun HomeScreen(
     }, snackbarHost = {
         SnackbarHost(snackBarHostState)
     }) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -84,40 +84,36 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             genresState?.let {
-                GenreSlider(
-                    genresList = genresState ?: emptyList(),
-                    selectedGenre = selectedGenre,
-                    onCategorySelected = { viewModel.onGenreChange(it) })
+                item {
+                    GenreSlider(
+                        genresList = genresState ?: emptyList(),
+                        selectedGenre = selectedGenre,
+                        onCategorySelected = { viewModel.onGenreChange(it) })
+                }
             }
             if (isLoading) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator()
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             } else {
                 moviesState?.let { movies ->
-                    LazyColumn {
-                        item {
-                            MovieSlider(
-                                moviesState = moviesState,
-                                onMovieClick = { navigateToMovieDetailScreen(it) },
-                            )
-                        }
-                        item{
-                            LazyColumn(
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                items(movies) {
-                                    MovieCard(
-                                        movie = it, modifier = Modifier.clickable(
-                                            onClick = { navigateToMovieDetailScreen(it.id) })
-                                    )
-                                }
-                            }
-                        }
+                    item {
+                        MovieSlider(
+                            moviesState = moviesState,
+                            onMovieClick = { navigateToMovieDetailScreen(it) },
+                        )
+                    }
+                    items(movies) {
+                        MovieCard(
+                            movie = it, modifier = Modifier.clickable(
+                                onClick = { navigateToMovieDetailScreen(it.id) })
+                        )
                     }
                 }
             }
