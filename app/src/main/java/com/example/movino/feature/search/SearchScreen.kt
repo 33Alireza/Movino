@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -23,13 +24,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movino.R
+import com.example.movino.core.common.UiStateEnum
+import com.example.movino.data.dto.MovieDataDto
 import com.example.movino.ui.components.CustomTopAppBar
 import com.example.movino.ui.components.MovieCard
 import com.example.movino.ui.components.MovieSearchBar
 import com.example.movino.ui.components.SearchResult
 import com.example.movino.ui.components.SearchResultError
-import com.example.movino.data.dto.MovieDataDto
-import com.example.movino.core.common.UiStateEnum
 import com.example.movino.ui.theme.MovinoTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,9 +40,9 @@ fun SearchScreen(
     navigateToMovieDetailScreen: (Int) -> Unit,
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
-    val moviesState = viewModel.movies.collectAsStateWithLifecycle()
-    val movieName = viewModel.searchQuery.collectAsStateWithLifecycle()
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val moviesState by viewModel.movies.collectAsStateWithLifecycle()
+    val movieName by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -59,42 +60,48 @@ fun SearchScreen(
                     }
                 })
         }) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
         ) {
-            MovieSearchBar(
-                value = movieName.value,
-                onValueChange = { viewModel.onMovieNameChanged(it) },
-                uiState = uiState.value
-            )
-            if (uiState.value == UiStateEnum.Empty) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    SearchResult(searchResultError = SearchResultError.NotFound)
+            item {
+                MovieSearchBar(
+                    value = movieName,
+                    onValueChange = { viewModel.onMovieNameChanged(it) },
+                    uiState = uiState
+                )
+            }
+            if (uiState == UiStateEnum.Empty) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        SearchResult(searchResultError = SearchResultError.NotFound)
+                    }
                 }
-            } else if (uiState.value == UiStateEnum.Exception) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    SearchResult(searchResultError = SearchResultError.BadRequest)
+            } else if (uiState == UiStateEnum.Exception) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        SearchResult(searchResultError = SearchResultError.BadRequest)
+                    }
                 }
             }
-            LazyColumn(
-                modifier = Modifier.padding(vertical = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(moviesState.value) { movie ->
+            items(moviesState) { movie ->
+                Column(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     MovieCard(
                         movie = MovieDataDto(
                             id = movie.id,
