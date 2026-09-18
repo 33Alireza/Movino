@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,14 +55,15 @@ import com.example.movino.ui.components.DotsIndicator
 import com.example.movino.ui.theme.MovinoTheme
 import kotlinx.coroutines.delay
 import kotlin.math.abs
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun DetailScreen(
     navigateToPreviousScreen: () -> Unit,
     viewModel: DetailViewModel = hiltViewModel(),
 ) {
-    val movie = viewModel.movie.collectAsStateWithLifecycle().value
-    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val movie by viewModel.movie.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val event = viewModel.event
 
     val snackBarHostState = remember { SnackbarHostState() }
@@ -113,221 +115,230 @@ fun DetailScreen(
                 }
             })
     }) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             when {
                 isLoading -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        CircularProgressIndicator()
+                    item {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
                 }
 
                 else -> {
-                    movie?.let { movie ->
-                        val images = movie.images
-                        var currentImageIndex by remember(images) { mutableIntStateOf(0) }
-                        LaunchedEffect(currentImageIndex) {
-                            if (images?.isNotEmpty() ?: false) {
-                                while (true) {
-                                    delay(5_000)
-                                    currentImageIndex = (currentImageIndex + 1) % (images.size)
-                                }
-                            }
-                        }
-                        var totalDrag by remember { mutableFloatStateOf(0f) }
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(214.dp)
-                                .clip(MaterialTheme.shapes.medium)
-                                .pointerInput(images) {
-                                    detectHorizontalDragGestures(
-                                        onDragEnd = {
-                                            images?.let {
-                                                if (abs(totalDrag) > 50f) {
-                                                    if (totalDrag > 0) {
-                                                        if (currentImageIndex == 0) {
-                                                            currentImageIndex = images.lastIndex
-                                                        } else {
-                                                            currentImageIndex -= 1
-                                                        }
-                                                    } else {
-                                                        currentImageIndex =
-                                                            (currentImageIndex + 1) % images.size
-                                                    }
-                                                }
-                                            }
-                                            totalDrag = 0f
-                                        }) { _, dragAmount ->
-                                        totalDrag += dragAmount
-                                    }
-                                }) {
-                            AsyncImage(
-                                modifier = Modifier.fillMaxSize(),
-                                model = images?.get(currentImageIndex)
-                                    ?: R.drawable.default_movie_image,
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                error = painterResource(R.drawable.default_movie_image)
-                            )
-
-                            DotsIndicator(
-                                totalDots = images?.size ?: 0,
-                                selectedIndex = currentImageIndex,
-                                modifier = Modifier
-                                    .align(Alignment.BottomCenter)
-                                    .padding(bottom = 8.dp)
-                            )
-                        }
+                    item {
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            Text(
-                                text = movie.title,
-                                style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            val textRow = mutableListOf(
-                                movie.year,
-                                movie.rated,
-                                movie.runtime,
-                                movie.genres.joinToString(", ")
-                            )
-                            Text(
-                                text = textRow.joinToString(" . "),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        }
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .width(69.dp)
-                                    .height(36.dp)
-                                    .clip(shape = MaterialTheme.shapes.extraSmall)
-                                    .background(color = MaterialTheme.colorScheme.secondary),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Row(
+                            movie?.let { movie ->
+                                val images = movie.images
+                                var currentImageIndex by remember(images) { mutableIntStateOf(0) }
+                                LaunchedEffect(currentImageIndex) {
+                                    if (images?.isNotEmpty() ?: false) {
+                                        while (true) {
+                                            delay(5_000.milliseconds)
+                                            currentImageIndex =
+                                                (currentImageIndex + 1) % (images.size)
+                                        }
+                                    }
+                                }
+                                var totalDrag by remember { mutableFloatStateOf(0f) }
+                                Box(
                                     modifier = Modifier
-                                        .fillMaxSize()
-                                        .clickable(onClick = { openIMDBWebpage() }),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceEvenly
-                                ) {
-                                    Icon(
-                                        imageVector = ImageVector.vectorResource(R.drawable.ic_imdb),
+                                        .fillMaxWidth()
+                                        .height(214.dp)
+                                        .clip(MaterialTheme.shapes.medium)
+                                        .pointerInput(images) {
+                                            detectHorizontalDragGestures(
+                                                onDragEnd = {
+                                                    images?.let {
+                                                        if (abs(totalDrag) > 50f) {
+                                                            if (totalDrag > 0) {
+                                                                if (currentImageIndex == 0) {
+                                                                    currentImageIndex =
+                                                                        images.lastIndex
+                                                                } else {
+                                                                    currentImageIndex -= 1
+                                                                }
+                                                            } else {
+                                                                currentImageIndex =
+                                                                    (currentImageIndex + 1) % images.size
+                                                            }
+                                                        }
+                                                    }
+                                                    totalDrag = 0f
+                                                }) { _, dragAmount ->
+                                                totalDrag += dragAmount
+                                            }
+                                        }) {
+                                    AsyncImage(
+                                        modifier = Modifier.fillMaxSize(),
+                                        model = images?.get(currentImageIndex)
+                                            ?: R.drawable.default_movie_image,
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSecondary
+                                        contentScale = ContentScale.Crop,
+                                        error = painterResource(R.drawable.default_movie_image)
                                     )
-                                    Text(
-                                        text = movie.imdbRating,
-                                        style = MaterialTheme.typography.labelLarge,
-                                        color = MaterialTheme.colorScheme.onSecondary,
+
+                                    DotsIndicator(
+                                        totalDots = images?.size ?: 0,
+                                        selectedIndex = currentImageIndex,
+                                        modifier = Modifier
+                                            .align(Alignment.BottomCenter)
+                                            .padding(bottom = 8.dp)
                                     )
                                 }
-                            }
-                            Box(
-                                modifier = Modifier
-                                    .width(69.dp)
-                                    .height(36.dp)
-                                    .clip(shape = MaterialTheme.shapes.extraSmall)
-                                    .background(color = MaterialTheme.colorScheme.secondary),
-                                contentAlignment = Alignment.Center
-                            ) {
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        text = movie.title,
+                                        style = MaterialTheme.typography.titleLarge,
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                    val textRow = mutableListOf(
+                                        movie.year,
+                                        movie.rated,
+                                        movie.runtime,
+                                        movie.genres.joinToString(", ")
+                                    )
+                                    Text(
+                                        text = textRow.joinToString(" . "),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                }
                                 Row(
-                                    modifier = Modifier.fillMaxSize(),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
-                                    Icon(
-                                        imageVector = ImageVector.vectorResource(R.drawable.ic_metacritic),
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSecondary
+                                    Box(
+                                        modifier = Modifier
+                                            .width(69.dp)
+                                            .height(36.dp)
+                                            .clip(shape = MaterialTheme.shapes.extraSmall)
+                                            .background(color = MaterialTheme.colorScheme.secondary),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .clickable(onClick = { openIMDBWebpage() }),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.SpaceEvenly
+                                        ) {
+                                            Icon(
+                                                imageVector = ImageVector.vectorResource(R.drawable.ic_imdb),
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.onSecondary
+                                            )
+                                            Text(
+                                                text = movie.imdbRating,
+                                                style = MaterialTheme.typography.labelLarge,
+                                                color = MaterialTheme.colorScheme.onSecondary,
+                                            )
+                                        }
+                                    }
+                                    Box(
+                                        modifier = Modifier
+                                            .width(69.dp)
+                                            .height(36.dp)
+                                            .clip(shape = MaterialTheme.shapes.extraSmall)
+                                            .background(color = MaterialTheme.colorScheme.secondary),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.fillMaxSize(),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.SpaceEvenly
+                                        ) {
+                                            Icon(
+                                                imageVector = ImageVector.vectorResource(R.drawable.ic_metacritic),
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.onSecondary
+                                            )
+                                            Text(
+                                                text = movie.metaScore,
+                                                style = MaterialTheme.typography.labelLarge,
+                                                color = MaterialTheme.colorScheme.onSecondary,
+                                            )
+                                        }
+                                    }
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(shape = MaterialTheme.shapes.medium)
+                                        .background(color = MaterialTheme.colorScheme.surface),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        modifier = Modifier.padding(16.dp),
+                                        text = movie.plot,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.Top,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        modifier = Modifier.width(56.dp),
+                                        text = stringResource(R.string.detail_screen_director),
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = MaterialTheme.colorScheme.primary,
                                     )
                                     Text(
-                                        text = movie.metaScore,
-                                        style = MaterialTheme.typography.labelLarge,
-                                        color = MaterialTheme.colorScheme.onSecondary,
+                                        text = movie.director,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.Top,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        modifier = Modifier.width(56.dp),
+                                        text = stringResource(R.string.detail_screen_writers),
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = MaterialTheme.colorScheme.primary,
+                                    )
+                                    Text(
+                                        text = movie.writer,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.Top,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        modifier = Modifier.width(56.dp),
+                                        text = stringResource(R.string.detail_screen_actors),
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = MaterialTheme.colorScheme.primary,
+                                    )
+                                    Text(
+                                        text = movie.actors,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onBackground,
                                     )
                                 }
                             }
-                        }
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(shape = MaterialTheme.shapes.medium)
-                                .background(color = MaterialTheme.colorScheme.surface),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(16.dp),
-                                text = movie.plot,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface,
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.Top,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier.width(56.dp),
-                                text = stringResource(R.string.detail_screen_director),
-                                style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.primary,
-                            )
-                            Text(
-                                text = movie.director,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onBackground,
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.Top,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier.width(56.dp),
-                                text = stringResource(R.string.detail_screen_writers),
-                                style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.primary,
-                            )
-                            Text(
-                                text = movie.writer,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onBackground,
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.Top,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier.width(56.dp),
-                                text = stringResource(R.string.detail_screen_actors),
-                                style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.primary,
-                            )
-                            Text(
-                                text = movie.actors,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onBackground,
-                            )
                         }
                     }
                 }
