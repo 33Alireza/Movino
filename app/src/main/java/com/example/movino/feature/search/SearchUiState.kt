@@ -1,4 +1,4 @@
-package com.example.movino.feature.detail
+package com.example.movino.feature.search
 
 import com.example.movino.core.common.UiState
 import com.example.movino.data.dto.MovieDataDto
