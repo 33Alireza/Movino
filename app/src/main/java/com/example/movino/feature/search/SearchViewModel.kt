@@ -2,17 +2,22 @@ package com.example.movino.feature.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movino.core.common.UiStateEnum
+import com.example.movino.core.common.UiState
 import com.example.movino.data.api.MoviesApi
-import com.example.movino.data.dto.MovieDataDto
+import com.example.movino.feature.detail.SearchUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
@@ -20,13 +25,7 @@ class SearchViewModel @Inject constructor(
     private val moviesApi: MoviesApi,
 ) : ViewModel() {
 
-    private val _movies = MutableStateFlow<List<MovieDataDto>>(emptyList())
-    val movies = _movies.asStateFlow()
-
-    private val _searchQuery = MutableStateFlow("")
-    val searchQuery = _searchQuery.asStateFlow()
-
-    private val _uiState = MutableStateFlow(UiStateEnum.Off)
+    private val _uiState = MutableStateFlow(SearchUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -35,35 +34,53 @@ class SearchViewModel @Inject constructor(
 
     private fun processSearching() {
         viewModelScope.launch {
-            _searchQuery.debounce(300).collectLatest { name ->
-                if (name.length > 3) {
-                    searchMovies(name)
-                } else {
-                    _movies.value = emptyList()
-                    _uiState.value = UiStateEnum.Off
+            _uiState.map { it.searchQuery }.distinctUntilChanged().debounce(300.milliseconds)
+                .collectLatest { name ->
+                    if (name.length > 3) {
+                        searchMovies(name)
+                    } else {
+                        _uiState.update {
+                            it.copy(
+                                movies = UiState.Idle
+                            )
+                        }
+                    }
                 }
-            }
         }
     }
 
     private suspend fun searchMovies(name: String) {
-        if (_uiState.value == UiStateEnum.Loading) return
-
-        _uiState.value = UiStateEnum.Loading
+        _uiState.update {
+            it.copy(
+                movies = UiState.Loading
+            )
+        }
 
         try {
             val response = moviesApi.getMovies(movieName = name)
 
-            _movies.value = response.data
-            _uiState.value = if (response.data.isEmpty()) UiStateEnum.Empty
-            else UiStateEnum.Success
+            _uiState.update {
+                it.copy(
+                    movies = UiState.Success(response.data)
+                )
+            }
 
-        } catch (_: Exception) {
-            _uiState.value = UiStateEnum.Exception
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+
+            _uiState.update {
+                it.copy(
+                    movies = UiState.Error(
+                        e.message ?: "Failed to search movies"
+                    )
+                )
+            }
         }
     }
 
     fun onMovieNameChanged(newMovieName: String) {
-        _searchQuery.value = newMovieName
+        _uiState.update {
+            it.copy(searchQuery = newMovieName)
+        }
     }
 }
