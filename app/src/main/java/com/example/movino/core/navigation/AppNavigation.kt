@@ -17,17 +17,17 @@ fun AppNavigation() {
     ) {
         composable<Home> {
             HomeScreen(
-                navigateToMovieDetailScreen = { navController.navigate(Detail(it)) },
-                navigateToMovieSearchScreen = { navController.navigate(Search) })
+                navigateToMovieDetailScreen = { navController.navigateSingleTop(Detail(it)) },
+                navigateToMovieSearchScreen = { navController.navigateSingleTop(Search) })
         }
         composable<Search> {
             SearchScreen(
-                navigateToPreviousScreen = { navController.navigateUp() },
-                navigateToMovieDetailScreen = { navController.navigate(Detail(it)) })
+                navigateToPreviousScreen = { navController.navigateUpSingleTop() },
+                navigateToMovieDetailScreen = { navController.navigateSingleTop(Detail(it)) })
         }
         composable<Detail> {
             DetailScreen(
-                navigateToPreviousScreen = { navController.navigateUp() })
+                navigateToPreviousScreen = { navController.navigateUpSingleTop() })
         }
     }
 }
